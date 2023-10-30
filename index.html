@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>70 Hour Timer</title>
+    <title>48 Hour Timer</title>
     <style>
         body, html {
             margin: 0;
@@ -50,9 +50,8 @@
         <div id="timer">
             48:00:00
         </div>
-        <h3>Sifadoint</h3>
+        <h3>Sifado - int</h3>
     </div>
-    <!-- ... (your HTML remains unchanged) ... -->
 
 <script>
     const timerDisplay = document.getElementById('timer');
@@ -71,10 +70,10 @@
 
     async function getEndTime() {
         const currentTime = await getCurrentUTCTime();
-        let targetTimestamp = localStorage.getItem('endTimestamp');
+        let targetTimestamp = Number(localStorage.getItem('endTimestamp'));  // Convert to number
 
         if (!targetTimestamp) {
-            targetTimestamp = currentTime.getTime() + 48 * 3600 * 1000;  // 70 hours in milliseconds
+            targetTimestamp = currentTime.getTime() + 48 * 3600 * 1000;  // 48 hours in milliseconds
             localStorage.setItem('endTimestamp', targetTimestamp);
         }
 
