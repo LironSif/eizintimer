@@ -52,53 +52,63 @@
         </div>
         <h3>Sifadoint</h3>
     </div>
-    <script>
-       const timerDisplay = document.getElementById('timer');
-let countdown;
+    <!-- ... (your HTML remains unchanged) ... -->
 
-function getEndTime() {
-    let targetTimestamp = sessionStorage.getItem('endTimestamp');
-    console.log("Retrieved from sessionStorage:", targetTimestamp); // Debug log
+<script>
+    const timerDisplay = document.getElementById('timer');
+    let countdown;
 
-    if (!targetTimestamp) {
-        const now = new Date();
-        const extraHours = 0;
-        targetTimestamp = now.getTime() + (48 + extraHours) * 3600 * 1000;
-        sessionStorage.setItem('endTimestamp', targetTimestamp);
-        console.log("New timestamp set:", targetTimestamp); // Debug log
+    async function getCurrentUTCTime() {
+        try {
+            const response = await fetch('http://worldtimeapi.org/api/ip');
+            const data = await response.json();
+            return new Date(data.datetime);
+        } catch (error) {
+            console.error("There was an error retrieving the time:", error);
+            return new Date();  // Fallback to local time in case of an error.
+        }
     }
 
-    return targetTimestamp;
-}
+    async function getEndTime() {
+        const currentTime = await getCurrentUTCTime();
+        let targetTimestamp = localStorage.getItem('endTimestamp');
 
-const endTime = getEndTime();
-
-function timer() {
-    clearInterval(countdown);
-
-    countdown = setInterval(() => {
-        const secondsLeft = Math.round((endTime - Date.now()) / 1000);
-
-        if (secondsLeft < 0) {
-            clearInterval(countdown);
-            return;
+        if (!targetTimestamp) {
+            targetTimestamp = currentTime.getTime() + 70 * 3600 * 1000;  // 70 hours in milliseconds
+            localStorage.setItem('endTimestamp', targetTimestamp);
         }
 
-        displayTimeLeft(secondsLeft);
-    }, 1000);
-}
+        return targetTimestamp;
+    }
 
-function displayTimeLeft(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const remainderMinutes = Math.floor((seconds % 3600) / 60);
-    const remainderSeconds = seconds % 60;
-    const display = `${hours}:${remainderMinutes < 10 ? '0' : ''}${remainderMinutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
-    timerDisplay.textContent = display;
-}
+    function timer(endTime) {
+        clearInterval(countdown);
 
-timer();
+        countdown = setInterval(() => {
+            const secondsLeft = Math.round((endTime - Date.now()) / 1000);
 
-    </script>
+            if (secondsLeft < 0) {
+                clearInterval(countdown);
+                return;
+            }
+
+            displayTimeLeft(secondsLeft);
+        }, 1000);
+    }
+
+    function displayTimeLeft(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const remainderMinutes = Math.floor((seconds % 3600) / 60);
+        const remainderSeconds = seconds % 60;
+        const display = `${hours}:${remainderMinutes < 10 ? '0' : ''}${remainderMinutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+        timerDisplay.textContent = display;
+    }
+
+    // Get the end time and then start the timer.
+    getEndTime().then(endTime => timer(endTime));
+
+</script>
+
 </body>
 
 </html>
