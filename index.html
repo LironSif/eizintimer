@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>48 Hour Timer</title>
+    <title>26 Hour Timer</title>
     <style>
         body, html {
             margin: 0;
@@ -48,7 +48,7 @@
     <div class="container">
         <h1>uss eisenhower in battle position</h1>
         <div id="timer">
-            48:00:00
+            26:00:00
         </div>
         <h3>Sifado - int</h3>
     </div>
@@ -73,7 +73,7 @@
         let targetTimestamp = Number(localStorage.getItem('endTimestamp'));  // Convert to number
 
         if (!targetTimestamp) {
-            targetTimestamp = currentTime.getTime() + 48 * 3600 * 1000;  // 48 hours in milliseconds
+            targetTimestamp = currentTime.getTime() + 26 * 3600 * 1000;  // 26 hours in milliseconds
             localStorage.setItem('endTimestamp', targetTimestamp);
         }
 
